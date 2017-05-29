@@ -1,0 +1,188 @@
+% This version uses the latex2e styles, not the very ancient 2.09 stuff.
+%\documentclass[letterpaper,twocolumn,10pt]{article}
+%\usepackage{usenix}
+%\usepackage{epsfig,endnotes}
+
+\documentclass[sigconf]{acmart}
+
+\usepackage{booktabs} % For formal tables
+
+
+
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage[english]{babel}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-}
+
+\usepackage{multirow}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{multicol}
+%\usepackage{amsmath}
+%\usepackage{amsthm}
+%\usepackage{authblk}
+
+\newtheorem{thm}{Theorem}
+
+%\newenvironment{proof}{ \bf Proof: }{  }
+
+
+%\newtheorem{theorem}[theorem]
+%\newcommand\CommentLine[1]{$\triangleright$ \parbox[t]{\dimexpr\linewidth-\algorithmicindent}{#1}}
+
+
+
+\long\def\comment#1{}
+\newcommand{\para}[1]{\smallskip\noindent {\bf #1}}
+\newenvironment{sitemize}{%
+  \begin{list}{$\bullet$}{%
+    %\setlength{\rightmargin}{\leftmargin}
+    \setlength{\itemsep}{0.2cm}%
+    \setlength{\leftmargin}{1.5em}%
+    \setlength{\topsep}{0pt plus 0pt minus 2pt}%
+    \setlength{\parsep}{0.0cm}}%
+  }{\end{list}}
+\newenvironment{senumerate}{%
+   \begin{list}{\arabic{enumi}.}{%
+    \setlength\labelwidth{1.5em}%
+    \setlength\leftmargin{1.5em}%
+    \setlength{\topsep}{0pt plus 0pt minus 2pt}%
+    \setlength\itemsep{0.0cm}%
+    \usecounter{enumi}}%
+  }{\end{list}}
+
+
+
+\newcommand{\eNB}{access point~}
+\newcommand{\wf}{Wi-Fi\xspace}
+\newcommand{\cf}{CellFi\xspace}
+\newcommand{\todo}[1]{\textbf{[[#1]]}}
+
+\newcommand{\idlow}[1]{\mathord{\mathcode`\-="702D\it #1\mathcode`\-="2200}}
+\newcommand{\id}[1]{\ensuremath{\idlow{#1}}}
+
+
+
+% Copyright
+%\setcopyright{none}
+%\setcopyright{acmcopyright}
+%\setcopyright{acmlicensed}
+%\setcopyright{rightsretained}
+%\setcopyright{usgov}
+%\setcopyright{usgovmixed}
+%\setcopyright{cagov}
+%\setcopyright{cagovmixed}
+
+
+% DOI
+%\acmDOI{10.475/123_4}
+
+% ISBN
+%\acmISBN{123-4567-24-567/08/06}
+
+%Conference
+\acmConference[CoNEXT'17]{ACM Conference on emerging Networking EXperiments and Technologies}{December 2017}{Seoul, South Korea} 
+\acmYear{2017}
+\copyrightyear{2017}
+
+%\acmPrice{15.00}
+
+\begin{document}
+
+
+%\title{Towards unlicensed cellular networks \\ \vspace{0.3in} \normalfont Under submission  - Please do not distribute}
+\title{Towards unlicensed cellular networks in TV white spaces}
+
+\author{Ghufran Baig}
+\orcid{1234-5678-9012}
+\affiliation{%
+  \institution{The University of Texas at Austin}
+}
+\email{ghufran@cs.utexas.edu}
+
+\author{Dan Alistarh}
+\orcid{}
+\affiliation{%
+  \institution{Microsoft Research}
+}
+\email{email@domain.com}
+
+\author{Thomas Karagiannis}
+\orcid{}
+\affiliation{%
+  \institution{Microsoft Research}
+}
+\email{email@domain.com}
+
+\author{Bozidar Radunovic}
+\orcid{}
+\affiliation{%
+  \institution{Microsoft Research}
+}
+\email{email@domain.com}
+
+\author{Matthew Balkwill}
+\orcid{}
+\affiliation{%
+  \institution{Microsoft Research}
+}
+\email{email@domain.com}
+
+\author{Lili Qiu}
+\orcid{}
+\affiliation{%
+  \institution{The University of Texas at Austin}
+}
+\email{email@domain.com}
+
+% \author[2]{Ghufran Baig\thanks{Work performed while an intern with Microsoft Research}}
+% \author[1]{Dan Alistarh}
+% \author[1]{Thomas Karagiannis}
+% \author[1]{Bozidar Radunovic}
+% \author[1]{Matthew Balkwill}
+% \author[2]{Lili Qiu}
+% \affil[1]{Microsoft Research}
+% \affil[2]{The University of Texas at Austin}
+
+\input{abstract}
+
+
+\maketitle
+
+
+\input{intro}
+\input{motivation}
+
+\input{arch}
+
+\input{design}
+
+
+
+
+\section{Implementation and Evaluation}
+\input{benchmarks}
+
+
+\input{evaluation}
+
+
+
+%\input{discussion}
+
+\input{related}
+
+\input{conclusions}
+
+
+
+\bibliography{ref}
+\bibliographystyle{unsrt}
+
+
+\input{appendix}
+
+
+\end{document} 

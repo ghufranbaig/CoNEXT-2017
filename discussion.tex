@@ -1,0 +1,18 @@
+\section {Discussion}
+
+In this section, we mention a number of important points related to \cf design that have not been discussed.
+
+\noindent {\bf Coexistence between \cf and 802.11af:} \cf focuses on coexistence among LTE nodes. There are several other efforts (LTE-U, LAA, LWA) that look into coexistence between LTE and WiFi. 
+These are orthogonal solutions that could be
+deployed along \cf to enable coexistence with 802.11af. 
+
+\noindent {\bf Centralized vs distributed control plane:} \cf deploys a decentralized control plane. We show that it is efficient and comparable with the state-of-art centralized control plane~\cite{fermi}. 
+We also note that \cf can be extended to include centralized coordination among nodes from one provider, and distributed coordination across multiple providers, which could further improve performance. 
+
+\noindent {\bf Mobility and roaming:} \cf inherits the benefits of the LTE architecture.
+It provides seamless roaming across access points, which is difficult to engineer in current WiFi deployments. 
+
+\noindent {\bf Channel aggregation and power optimization:} \cf currently only uses a single TV channel for its operations. One can think of a more flexible channel allocation that will allow channel aggregation and optimization for power. However, these raises other challenges, such as how to detect interference in partially overlapping channels~\cite{whitefi}, which we leave as future work.
+
+\noindent {\bf Ease of deployability:} \cf works with unmodified LTE base-band chipsets. However, it does require changes on the access point side. We note that the majority of LTE small cells today are built in software, on programmable reference platforms from TI, Freescale, Broadcom and Qualcomm. Hence we speculate that \cf can be implemented entirely in software on top of these commodity platforms. 
+

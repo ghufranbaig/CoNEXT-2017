@@ -1,0 +1,243 @@
+
+\section{Interference management}
+
+The interference management component of \cf needs to solve a distributed channel allocation problem, 
+and in particular it needs to determine: {\em (1) What share of resource blocks should each network get?} and 
+{\em (2) Which particular resource blocks should each access point use and how should it adjust it dynamically?}
+
+Similar allocation problems have been well studied in other contexts, for example in \wf or LTE SON. 
+However, there are several specifics that make this problem in the \cf context unique. 
+Firstly, \cf is required to manage interference without explicit coordination, unlike conventional LTE networks (c.f.~\cite{smallcellbook, fermi}). 
+Secondly, an LTE access point can transmit on several resource blocks at once, 
+and it can change the schedule in each subframe (1ms interval) without any overhead. 
+Further, an LTE client can always sense the status of all resource blocks, even the ones it is not receiving in. 
+This is very different from \wf where a node can only use and sense one channel at a time, and has significant overhead when changing channels. 
+Thirdly, if two access points transmit on the same resource block and these transmission interfere at a client, the client will not receive its transmission. This is in contrast with \wf where nodes use CSMA to further avoid interference among nodes that share the same channel. 
+Thus, in comparison with \wf, \cf has better sensing and frequency scheduling mechanisms, but the consequences of wrong decisions are more detrimental. 
+
+Next, we discuss \cf's distributed interference management algorithm. 
+\cf schedules resources in terms of subchannels, where a subchannel is defined to be the minimal set of resource blocks that can be scheduled in LTE and for which we can get channel quality information (Section~\ref{sec:sensing}). 
+In practice, there are 13 such subchannels on 5MHz channel and 25 subchannels on a 20 MHz channel. 
+The following discussion focuses on the downlink because the uplink is much less saturated; 
+yet, the uplink can be managed similarly.
+
+We start by describing the sensing mechanisms \cf uses to learn about its neighborhood and then we discuss the distributed share calculation and the distributed subchannel selection phases. %, described previously in Section~\ref{sec:archint}.
+We defer the discussion about the convergence properties of the algorithm as well as its theoretical guarantees to the appendix. In short, 
+the algorithm is guaranteed to converge to the pre-calculated share allocation in $\log{(\mbox{\# users})}$ steps. 
+
+
+
+\subsection{Sensing mechanisms}
+\label{sec:sensing}
+
+Like WiFi, the \cf interference mitigation algorithm relies on sensing information from the environment. The \cf access point leverages standard LTE radio primitives to estimate the following:
+
+\noindent{\bf Number of active clients.} In LTE, each client sets up a connection by sending PRACH preambles. 
+This is a special preamble that is used by access points to identify a new node and assign spectral resources to it. 
+In \cf, we extend this mechanism, and each access point is equipped with an additional PRACH detector that can sense PRACH preambles from \emph{clients it is not serving} (Section~\ref{sec:pracheval}).
+This is used to estimate the number of active clients. 
+The transmit power difference between a client and \eNB is up to 10dB, 
+and a PRACH detector can reliably detect preambles at -10dB SNR~\cite{prach}. 
+Thus, any client whose PRACH is detected is likely to be affected by transmissions from the \eNB. 
+\cf nodes use PDCCH-order RACH primitive of LTE to solicit PRACH preambles every second~\cite{36_213}. 
+This allows sensing nodes to expire each estimate after 1 second and account for nodes that become inactive. 
+
+
+\noindent{\bf Client interference in each subchannel.} When instructed by its access point, LTE clients report 
+back a channel quality indicator (CQI). 
+The \cf access point configures its clients to send higher layer-configured aperiodic mode 3-0, sub-band CQI reports~\cite{36_213} every 2 msec. 
+It tracks the maximum reported CQI for each client and \emph{each subchannel} over a period of time. 
+Drops in CQI values indicate interference with a client in that subchannel (Section~\ref{sec:eval_cqi}). 
+
+
+
+
+
+
+\subsection{Distributed Share Calculation}
+\label{sec:share-calculation}
+
+%Every \eNB is set to detect PRACH preambles from any user but responds with a RAR message only to its own users.
+%The \eNB keeps track of the number of the unique PRACH preambles it has received in the previous round.
+
+%In our implementation, each \eNB $i$ computes its share for all its users using the following procedure. (See %Figure~\ref{fig:dsc} for pseudo-code.) 
+
+
+Consider \eNB $i$. Let $\mathcal{S}$ be the total number of subchannels available, 
+$\id{NP}_i$ the number of estimated active clients and 
+$\id{N}_i$ the number of active clients associated with \eNB $i$. 
+We estimate $\id{NP}_i$ using the PRACH detector.
+
+
+First, for each active client, the \eNB $i$ reserves 
+%$$\frac{\mathcal{S}}{\id{NP}_i}$$ 
+$\mathcal{S} / \id{NP}_i$ 
+distinct shares, giving it a total share of 
+%$$\id{S}_i =  \id{N}_i * \frac{\mathcal{S}}{\id{NP}_i}$$ 
+$\id{S}_i =  \id{N}_i * \mathcal{S} / \id{NP}_i.$ 
+This is how we ensure \emph{frequency fair-sharing.} All $\id{NP}_i$ clients that \eNB $i$ interferes with should get enough non-interfering subchannels. 
+
+Because of imperfect sensing, this approach can occasionally underestimate the target shares and reduce efficiency, but it is still more efficient than Wi-Fi or LTE, as our evaluation in Section~\ref{sec:eval} shows. An \eNB can also initially overestimate the share available to some of the clients, in which case the scheduler will later automatically assign these to its other clients. Please see the appendix for further discussion. 
+
+%one of its client but if the client does not actually have enough interference free subchannels, 
+%the scheduler will make sure that the additional subchannels are either used for some other client of the same \eNB or are left free.
+
+
+%Further, if an \eNB initially overestimates its share because of imperfect sensing, it will use the $\id{free}_{i, j}$ estimator to back off from its initial demand, allowing other nodes  to achieve their share (discussed in Section~\ref{sec:asymmetry}).
+
+%The unused total share of the \eNB is then divided among users which observe more free channels than their current share. 
+%The total demand of the \eNB will then be 
+%$$\sum_{user\, j} \id{share}_{j}.$$ 
+
+%We note that a client may not get any share as an outcome of this procedure. 
+%However, this does not mean that it will starve. As described next, our scheduler will still try to schedule all clients; 
+%however, clients that got no share are more likely to get starved because of excessive interference. 
+
+
+
+%% \centering
+%% \begin{minipage}{.45\textwidth}
+%%   \centering
+%% \begin{algorithmic}[1]
+%%  {\small
+%% %  \CommentLine{Lease the line corresponding to \texttt{addr} for \texttt{len} cycles}
+%% \Function{ShareCalculation}{ \eNB $i$ } 
+%% 	\For{ each user $j$ }
+%% 		\State $\triangleright$ Reserve subchannels per user 
+%% 		\State $\id{share}_j  \gets \min( \lfloor \mathcal{S} / \id{NP}_i \rfloor, \id{free}_{i, j} )$ 
+%% 	\EndFor
+%% 	\State $\triangleright$ Compute unused subchannels
+%% 	\State $\id{extra}_i \gets ( \sum_{ j} \id{free}_{i, j} - \sum_{j} \id{share}_j) $ 
+%% 	\State $\triangleright$ Users with underutilized subchannels
+%% 	\State $\id{cand}_i \gets$ users with $(\id{free}_{i, j} > \id{share}_j)$ 
+%% 	\If { $\id{extra}_i$ > 0 }
+%% 		\State allocate $\id{extra}_i$  to users in $\id{cand}_i$	
+%% 	\EndIf
+%% 	\State \textbf{return} $\sum_{\id{user} j} \id{share}_j $
+%% \EndFunction
+%% }
+%% %\Statex
+%% \end{algorithmic}
+%% %\end{algorithm*}
+%% \vspace{-6pt}
+%% \caption{{Distributed share calculation.}}
+%% \vspace{-12pt}
+%% \label{fig:dsc}
+%% \end{minipage}\hspace{3em}
+
+
+
+\begin{figure}[tbp]
+\begin{minipage}{.45\textwidth}
+\begin{algorithmic}[1]
+ {\small
+%  \CommentLine{Lease the line corresponding to \texttt{addr} for \texttt{len} cycles}
+\Function{Hopping}{ \eNB $i$ } 
+	
+	%\State $\triangleright$ Initialization:
+
+	%\For{ each user $j$ }
+		
+		\State $C_j \gets \id{S}_i$ subchannels, picked randomly
+		\For{ each subchannel $k$ }
+				\State $\triangleright$ Draw exponential bucket value 
+				\State $b_k^i \gets \texttt{exp}(\lambda)$ 
+		\EndFor
+	%\EndFor
+	
+	\For{ each phase }
+		\For{ each occupied subchannel $k$ }
+			\If{ $b_k^i = 0$ }
+				\State $k' \gets$ subchannel with maximum utility
+				\State swap $k$ with $k'$ 
+			\EndIf
+		\EndFor
+	\EndFor
+\EndFunction
+}
+%\Statex
+\end{algorithmic}
+\vspace{-6pt}
+\caption{{Hopping Procedure.}} 
+\vspace{-12pt}
+\label{fig:hopping}
+\end{minipage}
+\end{figure}
+
+
+ 
+%$$Share_i = \frac{NA_i}{ NR_i} \times Number of SubChannels$$ 
+%where $NA_i$ is the number of active users associated with $eNB_i$ and $NR_i$ is the number of unique RACH preambles received by $eNB_i$ in the previous round. The $NR_i$ approximates the number of clients that can hear $eNB_i$ and will hence be affected by $eNB_i$ transmissions. 
+%$eNB_i$ then distributes $Share_i$ equally among its active users, i.e every user gets $\frac{Share_i}{NA_i}$.
+%If for a user $j$, $\frac{Share_i}{N_i} > Free_{ij}$, $j'$s share is reduced to $Share_{ij} = Free_{ij}$, and the remaining share $(\frac{Share_i}{N_i} - Free_{ij})$, is distributed among users who can take more share i.e. users for which $(\frac{Share_i}{N_i} < Free_{ik})$. If no user is available to take up the remaining share $eNB_i$ reduces its share to $$Share_i = \sum_{j=1}^{NA_i} Share_{ij}$$
+
+
+\subsection{Distributed Subchannel Selection}
+  \label{sec:channel-selection}
+  
+We now describe the process by which an \eNB selects and schedules subchannels. 
+For clarity, we split this  into the following procedures. 
+  
+%An \eNB $i$ assigns subchannels to its clients as follows (see Figure~\ref{fig:hopping} for pseudocode).
+
+%  \label{hopping}
+\noindent{\bf Subchannel Hopping.} 
+Initially, \eNB $i$ randomly picks $\id{S}_i$ subchannels. 
+For each subchannel $k$ chosen by $i$, a random bucket value $b^{i}_{k}$ is drawn from an exponential distribution with mean $\lambda$ (we found $\lambda = 10$ to be a good choice experimentally). 
+Clients associated with an \eNB send periodic subchannel CQI reports. 
+In all subsequent phases, if a subchannel bucket value $b^{i}_{k}$ reaches $0$, the \eNB $i$ gives up subchannel $k$, and chooses a new subchannel based on a function of CQI values reported by the users that were scheduled on subchannel k.
+Our implementation chooses the new subchannel that has maximum utility, where utility is defined as the sum of throughput achieveable (as estimated from the CQI reading) by all the clients scheduled over the previous subchannel in the recent past scaled by the fraction of time that client was scheduled. 
+See Figure~\ref{fig:hopping} for pseudocode. 
+
+%  \label{bucket-update}
+\noindent{\bf Bucket Updates.}
+    Each \eNB updates its bucket values corresponding to employed subchannels periodically as follows. For every client $u_j$ scheduled on the subchannel during the previous period
+
+%\begin{itemize}
+%\item 
+\vskip 2pt
+\noindent $\bullet$ If client $u_j$ observes subchannel $k$ as \emph{good} (according to the last CQI report), then $b^{i}_{k}$ stays unchanged.
+%\item 
+\vskip 2pt
+\noindent $\bullet$ Otherwise we interpret subchannel $k$ as being a \emph{bad} for \eNB $i$. Consequently, the bucket value $b^{i}_{k}$ is decremented to $b_k(t+1) = b_k(t) - frac_j$, where $frac_j$ is the fraction of time that $u_j$ got scheduled on subchannel $k$ during the last period.
+\vskip 2pt
+%\end{itemize}
+
+The subchannel hopping and bucket update procedures are similar to other Markovian schemes (e.g. IQ-hopping~\cite{iqhop}) but are adapted to address the main differences between LTE and Wi-Fi, discussed at the beginning of this section.
+
+%% In particular, while WiFi has a well defined channel and each WiFi node only
+%% needs to select one channel to hop, in \cf, we have fine-grained sharing using OFDMA, where a frame may contain data to
+%% different clients in different subchannels over time. 
+%% Moreover, we can no longer rely on frame-level ACKs used in IQ-hopping to
+%% determine how long to stay on a subchannel, so we rely on CQI measurements which is reported per subchannel.
+
+
+%% \noindent {\bf Scheduling.} Whole resources are allocated to an access point using the procedures above, 
+%% they are not strictly assigned to any specific client. The interference created by an access point does not depend on which clients are scheduled in which subchannels, 
+%% but only on which subchannels are overall used by the access point. Thus, the access point has a flexibility to modify the scheduler without affecting the rest of the network. 
+%% This allows us to ensure that resource reservation is decoupled from resource scheduling for clients. 
+
+%% Once the \eNB attains its subchannel demand, it schedules its users in its reserved subchannels according to a \emph{proportional fair schedule}\cite{propfair}. 
+%% The main reason for this is to improve efficiency; If all flows are fully saturated, the proportional scheduler will tend to schedule traffic 
+%% according to the way resources are allocated. However, if one of the clients is idle, the access point will assign the corresponding resource to other clients in order to maximize spectral efficiency 
+%% and provide work conservation.  
+
+
+\noindent {\bf Channel re-use.} Clients very close to their respective access points are not likely to interfere with anyone else;  
+hence, it would be beneficial to schedule them in the same subchannels across different networks to maximize throughput. 
+%otherwise some of the access points might not be able to get interference free channels even when the neighbouring access points only transmit on their conservative share of subchannels.
+% (see figure~\ref{fig:asym}(a) for an example). 
+This is difficult to accomplish without coordination across networks and access points.
+To achieve this, we use the following heuristic.
+%Each client maintains a leaky bucket corresponding to each channel it is assigned to. 
+%The client will move to a channel \emph{of lower index} if this channel is detected as \emph{free} for a certain contiguous period of time. 
+The access point will give up subchannel $i$ and move to a subchannel \emph{of lower index} if this subchannel is detected as \emph{free} for a certain contiguous period of time, by all of the users that were scheduled on the subchannel $i$ in the recent past. 
+The idea is that clients which experience low interference (such as the ones close to access points), 
+will gradually move towards lower-index subchannels, spontaneously self-organizing. 
+Channel re-use allows for fast convergence and upto 2x gain in throughput for exposed clients as seen in our experiments. 
+
+%the network efficiency is significantly improved 
+%{\bf XXXX ADD Some number on how much channel re-use improves results XXX}
+
+We defer theoretical analysis and discussion of the algorithm to the appendix.
+

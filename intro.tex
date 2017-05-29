@@ -1,0 +1,129 @@
+%!TEX root = main.tex
+
+%Intro main points:
+%\begin{itemize}
+%\item Exponential growth on demand for mobile data
+%\item WLAN ubiquitous - 70\% of wireless traffic 
+%\begin{description}
+%\item{+} Uncoordinated
+%\item{+} Cheap deployment, infrastucture
+%\item{-} Short-range. Coverage is not global (add numbers/measurements)
+%\end{description}
+
+%\item Cellular
+%\begin{description}
+%\item{+} Long-range, broad coverage
+%\item{-} Expensive
+%\item{-} Proprietary frequency/hardware
+%\item{-} Complex ecosystem - stifles innovation
+%\item{-} No standards, interoperability in many protocols
+%\end{description}
+
+%\item Opportunity: Frequency availability for long-range 
+%\item Can we combine the + from WiFi \& Cellular => CellFi
+
+%\item Current options:
+%\begin{itemize}
+%\item 802.11af - in progress. Problems with range, symmetry, efficiency
+%\item 802.22 - unsuccesful, no hardware
+%\end{itemize}
+
+
+%\item Contributions
+%\begin{itemize}
+%\item CellFi - Long-range unlicenced network
+%\item Decentralized algorithm for unccordinated deployment
+%\item Measurements in the wild
+%\item Complete implementation and simulations
+%\end{itemize}
+
+
+%\end{itemize}
+
+\section{Introduction}
+The vision of 5G cellular networks has created exciting new opportunities for innovation. 
+While it remains to be seen what technologies will eventually be included in 5G, 
+one of the expectations is that
+5G will offer greater coverage, capacity improvement, and latency reduction
+by leveraging unlicensed spectrum and deploying a large number of
+dense access points. Unlicensed spectrum is attractive, as anyone is
+allowed to run its network provided a set of agreed rules are respected.  These
+rules typically refer to the coordination between technologies and
+equipment sharing the spectrum so that use is ``fair.''
+
+The goal of this paper is to design an {\em unlicensed cellular network}, a network which provides cellular-like experience in unlicensed frequencies -- long-range coverage for users with mobile devices,
+but at the same time follows the successful model of \wf's unplanned deployment.
+To provide coverage, the network should operate in unlicensed spectrum at low UHF frequencies,
+taking advantage of the recent availability of frequencies for long-range communications in TV white spaces (TVWS).
+The network should meet the regulatory requirements for TVWS~\cite{etsi_tvws, Rice_af} and allow for the deployment of any number of access points without central coordination but with the ability to control mutual interference.
+
+A natural question to ask is \emph{which wireless technology should an unlicensed cellular network be built upon?}
+Several standards have been proposed for networking in TV white spaces (802.11af\cite{Rice_af}, 802.22\cite{802.22}, Weightless\cite{weightless}). Most have been abandonded and the TV white spaces efforts now mainly focus 
+on 802.11af, which is a modification of Wi-Fi. 
+\wf appears as a natural fit for an unplanned deployment in TVWS.
+It inherently allows for network co-existence, and 802.11af amendments allow it to operate in TVWS while maintaining its low silicon design cost by significantly reusing existing Wi-Fi design. 
+Yet, \wf PHY is not suited for long-range~(Section~\ref{sec:PHY}) and 
+\wf's overheads, such as carrier sense and backoff mechanisms, severely limit its efficiency on long range~(Section~\ref{sec:MAC}). 
+
+%Moreover, the asymmetric links between downlink and uplink exacerbate hidden 
+%and exposed terminals in long ranges (Section~\ref{sec:PHY}).
+
+
+Beyond Wi-Fi, another obvious candidate for an unlicenced cellular network could be LTE/4G, which presents a well developed ecosystem for cellular networking in licensed frequency. 
+Surprisingly, this option has not been much explored. 
+Conventional cellular technologies, such as LTE, are efficient and provide long range~(Section~\ref{sec:PHY}). 
+But they are tailored to licensed spectrum where interference is managed either through coordinated control protocols or at deployment phase. 
+LTE has no provisioning to avoid primary spectrum users~\cite{etsi_tvws}. 
+Further, it has no mechanism to avoid unplanned interference, which can frequently occur in unlicensed bands.
+In such cases, current LTE design will lead to significant collisions and performance degradation in TVWS~(Section~\ref{sec:MAC}).  
+Further, conventional cellular networks typically represent expensive deployments based on proprietary hardware and software.
+Standards and interoperability across protocols and networks are often poorly specified, 
+and in general, ``cellular'' reflects a complex ecosystem, tightly controlled by providers and hardware vendors. 
+Therefore, LTE in its current form faces major challenges in supporting network co-existence. 
+
+
+In this paper, we propose {\em \cf}, a TVWS-compliant cellular network architecture built on top of the LTE stack. 
+\cf leverages LTE PHY-layer advantages to achieve coverage. 
+\cf extends the LTE stack with two new components, a channel selection and an interference management component. 
+The channel selection component interfaces with a TVWS database and is able to quickly vacate a channel once it has been assigned to a primary user. 
+%The interference management component manages interference among \cf nodes.
+Interference management across \cf nodes is based on an algorithm 
+ for distributed coordination in LTE that requires no explicit communication or coordination between access points.
+The interference management component estimates the number of contending nodes using standard LTE radio mechanisms and uses this estimate to calculate its own network share. Each access point then strategically and independently selects one or multiple LTE resource blocks according to this derived share, 
+and relies on the standard LTE scheduler to allocate resource blocks to clients.  
+
+%% Interference is managed through frequency sharing following a two-phase process where
+%% channel reservation and resource scheduling are decoupled. Base
+%% stations use sensing to conservatively 
+%% estimate their fair-share of channels in a distributed fashion. Each base station then strategically selects one or
+%% multiple subchannels according to the derived share, 
+%% and schedules its clients onto its selected channels. 
+
+
+To demonstrate the feasibility of \cf and evaluate its performance, 
+%we implemented 
+%most \cf components on top of off-the-shelf LTE access points. 
+we perform several indoor and outdoor experiments as well as large-scale simulations. 
+We find that our system can achieve 1km range while maintaining throughput above 1Mbps, and that it can quickly vacate a channel if a primary user appears. 
+Moreover, we find that our distributed interference mechanism is effective and in most examined cases better than the one in 802.11af. 
+Our contributions can be summarized as follows. 
+
+
+
+\begin{sitemize}
+\item We demonstrate the limitations
+    of the existing WiFi and LTE protocols when deployed in the unlicensed
+  cellular scenario. These observations lay the foundation for the  design of \cf.  
+\item We develop \cf, a long-range LTE-based, TVWS-compliant cellular architecture with decentralized interference management that allows for unplanned and uncoordinated deployments. 
+\item We demonstrate the feasibility of \cf through a series of experiments with off-the-shelf LTE equipment. 
+With the exception of interference management component, \cf access points have been operational for several 
+months connecting under-privileged users in our local area. Our measurements are further used to guide a large-scale evaluation of \cf. 
+\item We show that \cf reduces the number of clients starved due to contention  by 70\%-90\% compared to \wf and LTE. This is achieved without penalizing the total network throughput or application performance.
+\end{sitemize}
+
+To our knowledge, \cf is the first attempt to provide an unplanned and uncoordinated LTE-based network in low-frequency unlicensed TVWS spectrum.
+Our vision is that \cf is the first step towards reducing the cost and improving the quality of cellular networking, 
+while at the same time spurring innovation and new research in a so-far tightly controlled network domain. 
+
+
+

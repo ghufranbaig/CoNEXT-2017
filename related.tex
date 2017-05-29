@@ -1,0 +1,34 @@
+\section{Discussion and Related Work}
+
+
+
+
+
+
+
+
+TV white spaces have recently become available for license exempt use~\cite{fcc, etsi_tvws}. 
+There are several currently proposed candidate technologies, such as 802.11af~\cite{Rice_af} and 802.22~\cite{wifi80222}, 
+but 802.11af seems to be the only one under active development. 
+
+LTE extensions have recently been proposed that seek to exploit unlicensed spectrum~\cite{qualcomm-lte-unlicensed,huawei-lte-unlicensed,ericsson-unlicensed}, but all these require an anchor, licensed spectrum for the LTE network.
+The main proposed standards are LAA, LWA and LTE-U. 
+Previous works ~\cite{co-existence, lteu-google} focus on WiFi and LTE coexistence in unlicensed spectrum, but coexistence between two LTE networks on the same spectrum has not been studied much.
+
+There are also numerous proposed solutions for coordinating interfering LTE access points, such as SON, ICIC, eICIC~\cite{smallcellbook}, 
+but these are vague on protocol details. 
+FERMI~\cite{fermi} proposes a centralized resource management solution in OFDMA networks, however it assumes cooperation among operators which is not realistic in our setting.
+%http://alumni.cs.ucr.edu/~marslan/hoc19-yoon.pdf (radion)
+RADION~\cite{radion} is a distributed resource management system designed for femtocell networks and does not scale well to large deployments.
+
+WiFi channel allocation has been extensively researched. 
+%http://www.cs.umd.edu/~srin/PDF/2006/chan-mgmt-conf.pdf
+%http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5337940
+%http://research.microsoft.com/en-us/um/people/moscitho/Publications/ICNP_2008.pdf
+There have been several studies ~\cite{client-deriven} ~\cite{load-aware} that address resource allocation using graph coloring for WiFi networks, but their aim is to get maximum number of orthogonal contiguous channels to each interfering AP. Our work aims at getting weighted max-min fair allocation for interfering clients by utilizing as many spectrum fragments (not necessarily contiguous) as possible.
+\wf 802.11af can be made to use more than one channel~\cite{whitefi}, and  LTE can achieve this with 
+carrier aggregation. We leave exploring these options for future work. 
+
+Several papers proposed the idea to use LTE in TV white spaces~\cite{dyspan_lte12, radisys} but none has described an
+ architecture or proposed an efficient distributed interference management system compatible with today's hardware. 
+
