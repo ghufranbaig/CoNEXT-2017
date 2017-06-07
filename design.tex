@@ -35,7 +35,7 @@ Like WiFi, the \cf interference mitigation algorithm relies on sensing informati
 \noindent{\bf Number of active clients.} In LTE, each client sets up a connection by sending PRACH preambles. 
 This is a special preamble that is used by access points to identify a new node and assign spectral resources to it. 
 In \cf, we extend this mechanism, and each access point is equipped with an additional PRACH detector that can sense PRACH preambles from \emph{clients it is not serving} (Section~\ref{sec:pracheval}).
-This is used to estimate the number of active clients. 
+This is used to estimate the number of active clients. \todo{Note that adding additional PRACH detector does not require any invasive change to LTE infrastructure \ref{}}
 The transmit power difference between a client and \eNB is up to 10dB, 
 and a PRACH detector can reliably detect preambles at -10dB SNR~\cite{prach}. 
 Thus, any client whose PRACH is detected is likely to be affected by transmissions from the \eNB. 
@@ -48,10 +48,6 @@ back a channel quality indicator (CQI).
 The \cf access point configures its clients to send higher layer-configured aperiodic mode 3-0, sub-band CQI reports~\cite{36_213} every 2 msec. 
 It tracks the maximum reported CQI for each client and \emph{each subchannel} over a period of time. 
 Drops in CQI values indicate interference with a client in that subchannel (Section~\ref{sec:eval_cqi}). 
-
-
-
-
 
 
 \subsection{Distributed Share Calculation}
@@ -202,7 +198,7 @@ See Figure~\ref{fig:hopping} for pseudocode.
 \noindent $\bullet$ Otherwise we interpret subchannel $k$ as being a \emph{bad} for \eNB $i$. Consequently, the bucket value $b^{i}_{k}$ is decremented to $b_k(t+1) = b_k(t) - frac_j$, where $frac_j$ is the fraction of time that $u_j$ got scheduled on subchannel $k$ during the last period.
 \vskip 2pt
 %\end{itemize}
-
+\todo{The random bucket values and bucket update procedure would ensure that two interfering users scheduled on a subchannel would not give up the subchannel at the same time hence ensuring both users get non-interfering subchannels eventually. }
 The subchannel hopping and bucket update procedures are similar to other Markovian schemes (e.g. IQ-hopping~\cite{iqhop}) but are adapted to address the main differences between LTE and Wi-Fi, discussed at the beginning of this section.
 
 %% In particular, while WiFi has a well defined channel and each WiFi node only

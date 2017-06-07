@@ -55,10 +55,11 @@ that multiple networks will be deployed in the same area and will need to coexis
 
 %{\bf BR: Do we want to discuss this or rely on the discussion in \cf section?}
 Coexistence between disparate wireless technologies in the same spectrum is a hard challenge, and still not fully solved in practice for many technologies (e.g., Wi-Fi, Zigbee and Bluetooth). In fact, none of the current TVWS standards (802.11af, 802.22 and Weightless) attempts to solve inter-technology coexistence problem. 
-In the same spirit, we will mandate decentralized interference management only among nodes using the same network technology, 
-and assume that in the future, either one technology will prevail or that a database will make sure different technologies will occupy different, non-overlapping parts of spectrum. 
+\todo{Recently proposed LTE extensions for unlicensed bands (LTE-U) has proposed using of adaptive on/off duty cycle as a mechanism to share the medium with \wf network in unlicensed bands. So effectively in on cycle  only LTE nodes are operational. However LTE-U has no mechanism of sharing spectrum between two interfering LTE nodes during the on cycle.} 
+In the same spirit, we will mandate decentralized interference management only among nodes using the same network technology, and assume\todo{ that LTE-U type on/off duty cycling is used for coexistence with \wf }
+or in the future, either one technology will prevail or that a database will make sure different technologies will occupy different, non-overlapping parts of spectrum. 
 
-\todo{Current LTE extensions for unlicensed bands (LTE-U/LAA) focus only on coexistence between LTE and WiFi. LTE-U proposes Carrier Sense Adaptive Transmission (CSAT) to efficiently co-exist with WiFi but does not tackle the issue of coexistence of two separate LTE networks. LAA has proposed a contention protocol similar to WiFi CSMA to perform LBT. This enables LAA networks to coexist with WiFi and other LAA networks, but its performance will suffer in long range whitespace networks as it will face similar issues as 802.11af shown in section \ref{} since the medium access mechanism is similar in both technologies.}
+
 
 Furthermore, we require our unlicensed cellular design to work entirely in unlicensed spectrum and not require a licensed spectrum anchor, so that anyone, and not only cellular operators, can deploy it. This is in contrast to current LTE proposals for 5 GHz ISM bands \cite{lteuforum_lteu, jian2015coexistence, radisys-lte}. 
 
@@ -97,7 +98,6 @@ Furthermore, we require our unlicensed cellular design to work entirely in unlic
 
 
 \section{Existing technologies \& unlicenced \\ cellular}
-\todo {ADD DISCUSION FOR LTE-LAA}
 We focus on Wi-Fi and LTE radio technologies as most of today's high speed wireless networks, and in particular cellular and TVWS networks, are based on one of these two wireless standards.
 They incorporate most of the modern PHY and MAC layer design constructs which make them very efficient.
 %The Wi-Fi variant 802.11af~\cite{Rice_af} is currently dominant among TVWS hardware platforms whereas LTE dominates the cellular market. 
@@ -206,7 +206,7 @@ We illustrate this in detail in an experiment described in Figure~\ref{fig:inter
 where we show that a strong interferer (with SINR $\leq 10$ dB) can degrade LTE throughput by up to $2\times$, and also cause frequent disconnections. 
 Thus, in order to make unplanned LTE deployment efficient, one needs to manage interference. 
 
-
+\todo{There have been recently proposed LTE extensions for unlicensed bands (LTE-U/LAA) that try to mitigate interference between neighboring base stations. However LTE-U focuses only on coexistence between LTE and WiFi. It proposes Carrier Sense Adaptive Transmission (CSAT) to efficiently co-exist with WiFi but does not tackle the issue of coexistence of two separate LTE networks. LAA has proposed a contention protocol similar to WiFi CSMA to medium access. This enables LAA networks to coexist with both WiFi and other LAA networks, however its performance will suffer in long range whitespace networks as it will face similar MAC inefficiencies as 802.11af since the medium access mechanism is similar in both technologies.}
 
 
 %% \begin{figure}[t]
