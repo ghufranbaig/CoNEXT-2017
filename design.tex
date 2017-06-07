@@ -73,7 +73,7 @@ distinct shares, giving it a total share of
 $\id{S}_i =  \id{N}_i * \mathcal{S} / \id{NP}_i.$ 
 This is how we ensure \emph{frequency fair-sharing.} All $\id{NP}_i$ clients that \eNB $i$ interferes with should get enough non-interfering subchannels. 
 
-Because of imperfect sensing, this approach can occasionally underestimate the target shares and reduce efficiency, but it is still more efficient than Wi-Fi or LTE, as our evaluation in Section~\ref{sec:eval} shows. An \eNB can also initially overestimate the share available to some of the clients, in which case the scheduler will later automatically assign these to its other clients. 
+Because of imperfect sensing, this approach can occasionally underestimate the target shares and reduce efficiency, but it is still more efficient than Wi-Fi or LTE, as our evaluation in Section~\ref{sec:eval} shows. An \eNB can also initially overestimate the share available to some of the clients, in which case the scheduler will later automatically assign these to its other clients. This is further discussed later in \ref{sec:asymmetry}.
 \todo{copy the discussion from the appendix to correct location.} 
 
 %one of its client but if the client does not actually have enough interference free subchannels, 
@@ -237,6 +237,94 @@ Channel re-use allows for fast convergence and upto 2x gain in throughput for ex
 %{\bf XXXX ADD Some number on how much channel re-use improves results XXX}
 
 %We defer theoretical analysis and discussion of the algorithm to the appendix.
+
+
+\begin{figure}[htb!]
+  %\hfill
+  %\begin{minipage}{0.33\textwidth}
+  %  \centering
+  %  (a)
+  %  \includegraphics[width=\textwidth,height=0.6\columnwidth]{./figs/pack.pdf}
+  %\end{minipage}
+  %\hspace{1pt}
+  \begin{minipage}{0.23\textwidth}
+    \centering
+    (a)
+    \vfill
+    \includegraphics[width=\textwidth,height=0.6\columnwidth]{./figs/over.pdf}
+  \end{minipage}
+  \begin{minipage}{0.23\textwidth}
+    \centering
+    (b)
+    \vfill
+  \includegraphics[width=\textwidth,height=0.6\columnwidth]{./figs/under.pdf}
+  \end{minipage}
+  \hfill
+  \caption{Lines reflect associated clients to access points while dashed lines reflect interference. }
+%(a) Importance of channel re-use. client 3 can only get its share if access points 1-2 schedule their clients on same two channels. 
+%(a) Information asymmetry with two total channels. access point 1 overestimates his share because it cannot sense client 2. (b) Informatrion assymetry with 4 total channels. 
+%access point 2 has a share of 1, and while access point 1 can increase his share to 3, 
+%it only reserves his fair-share, i.e., 2 channels because it does know how many subchannels 2 is using (1 due to clients 3-5)}
+  \label{fig:asym}
+\end{figure}
+
+
+\subsection{Effects of information asymmetry}
+\label{sec:asymmetry}
+
+
+Wireless sensing depends on node location, and different nodes will obtain different views of the network. 
+Every distributed wireless coordination protocol has to deal with this information asymmetry. 
+The best known examples of information asymmetries in WiFi are exposed and hidden terminals. 
+The distributed share calculation algorithm of \cf also suffers from two cases of information asymmetry, 
+described below. 
+
+
+
+
+
+%\begin{figure*}[t]
+% \centering
+%    \includegraphics[width=0.9\textwidth, height=0.4\columnwidth]{figs/exampleFigs-crop}
+% \caption{Lines reflect associated clients to access points while dashed lines reflect interference. 
+%(a) Importance of channel re-use. client 3 can only get its share if access points 1-2 schedule their clients on same two channels. 
+%(b) Information asymmetry with two total channels. access point 1 overestimates his share because it cannot sense client 2. (c) Informatrion assymetry with 4 total channels. 
+%access point 2 has a share of 1, and while access point 1 can increase his share to 3, 
+%it only reserves his fair-share, i.e., 2 channels because it does know how many subchannels 2 is using (1 due to clients 3-5)}
+%  \label{fig:asym}
+%\end{figure*}
+
+
+
+
+\noindent {\bf Incorrect share:} Figure~\ref{fig:asym}(a) shows an example of incorrect share calculation caused by asymmetric views. 
+access point 1 can hear only the PRACH preamble from client 1, whereas eNB2 hears it from both clients 1 and 2. The optimal share for both eNBs is half of the spectrum. 
+Because of asymmetry, access point 1 is overestimating its share to be the whole spectrum.
+
+%BR: This is not true. If we don't adjust the share, it will make eNB1 to hop a lot, causing disturbances in the rest of the network...
+%This case of information asymmetry is not detrimental to the control plane. It does not affect client 2 because if it did eNB1 would hear it RACH and account for it in the channel allocation. It only affect client1. eNB1 detects this from CQI reports from client1 and adjusts the allocation accordingly and entirely locally. 
+
+This case of information asymmetry is dealt with by the scheduler, \eNB $1$ will sense that there are less free subchannels available than it expected, and will not schedule any transmission in subchannels the client is facing interference on, reducing its effective share. The resulting effective share will still be feasible, allowing the distributed hopping algorithm to converge. However, this share adjustment may not be detected by other neighbors of \eNB $1$, leading to possible inefficiencies.
+%in the share calculation algorithm (Figure~\ref{fig:dsc}) 
+%through the $\id{free}_{i, j}$ variable. \eNB $1$ will sense that there are less free channels available than it expected, and will update its share. The resulting share will still be feasible, allowing the distributed hopping algorithm to converge. However, this share adjustment may not be detected by other neighbors of \eNB $1$, leading to possible inefficiencies. 
+
+%\begin{figure}[th!]
+%  \centering
+%    \includegraphics[width=0.45\textwidth]{under}
+% \caption{Suboptimal share calculation due to view asymmetry.}
+%  \label{underestimation}
+%\end{figure}
+
+\noindent {\bf Suboptimal share:} Figure~\ref{fig:asym}(b) shows an example with a total of 4 subchannels, where access point 1 can get one more subchannel since access point 2 can only use one subchannel for its client;
+this is because it is interfering with three other clients. Access point 1 limits itself to its estimated share of two subchannels, resulting in under allocation of resources. 
+This case of information asymmetry is fundamental of our setup as \eNB $1$ cannot learn about other clients purely from sensing. It can also not be more aggressive in this case as it could unfairly take a share 
+from node 2, should the three clients on the right be absent. 
+
+The performance effects of information asymmetries of \cf in general topologies are difficult to analyze precisely. 
+In Section~\ref{sec:eval},
+ we show that in complex topologies, \cf's performance is comparable to state-of-the-art, centralized resource allocation frameworks for cellular networks~\cite{fermi}.
+
+
 
 \subsection{Algorithm Properties}
 \label{sec:proof}
