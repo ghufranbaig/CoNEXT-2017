@@ -3,8 +3,8 @@
 %\usepackage{usenix}
 %\usepackage{epsfig,endnotes}
 
-\documentclass[sigconf]{acmart}
-
+%\documentclass[sigconf]{acmart}
+\documentclass[10pt, sigconf]{acmart}
 \usepackage{booktabs} % For formal tables
 
 
@@ -83,11 +83,16 @@
 %\acmISBN{123-4567-24-567/08/06}
 
 %Conference
-\acmConference[CoNEXT'17]{ACM Conference on emerging Networking EXperiments and Technologies}{December 2017}{Seoul, South Korea} 
-\acmYear{2017}
-\copyrightyear{2017}
+%\acmConference[CoNEXT'17]{ACM Conference on emerging Networking EXperiments and Technologies}{December 2017}{Seoul, South Korea} 
+%\acmYear{2017}
+%\copyrightyear{2017}
 
 %\acmPrice{15.00}
+
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\settopmatter{printfolios=false}
+\pagestyle{empty} % removes running headers
 
 \begin{document}
 
@@ -96,46 +101,46 @@
 \title{Towards unlicensed cellular networks in TV white spaces}
 
 \author{Ghufran Baig}
-\orcid{1234-5678-9012}
+\orcid{}
 \affiliation{%
   \institution{The University of Texas at Austin}
 }
-\email{ghufran@cs.utexas.edu}
+%\email{ghufran@cs.utexas.edu}
 
 \author{Dan Alistarh}
 \orcid{}
 \affiliation{%
   \institution{Microsoft Research}
 }
-\email{email@domain.com}
+%\email{email@domain.com}
 
 \author{Thomas Karagiannis}
 \orcid{}
 \affiliation{%
   \institution{Microsoft Research}
 }
-\email{thomas.karagiannis@microsoft.com}
+%\email{thomas.karagiannis@microsoft.com}
 
 \author{Bozidar Radunovic}
 \orcid{}
 \affiliation{%
   \institution{Microsoft Research}
 }
-\email{bozidar@microsoft.com}
+%\email{bozidar@microsoft.com}
 
 \author{Matthew Balkwill}
 \orcid{}
 \affiliation{%
   \institution{Microsoft Research}
 }
-\email{email@domain.com}
+%\email{email@domain.com}
 
 \author{Lili Qiu}
 \orcid{}
 \affiliation{%
   \institution{The University of Texas at Austin}
 }
-\email{lili@cs.utexas.edu}
+%\email{lili@cs.utexas.edu}
 
 % \author[2]{Ghufran Baig\thanks{Work performed while an intern with Microsoft Research}}
 % \author[1]{Dan Alistarh}
