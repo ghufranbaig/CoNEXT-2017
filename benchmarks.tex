@@ -56,7 +56,9 @@ Measurements without SDR are performed outdoors. Measurements with SDR are perfo
 \subsection{Channel selection}
 \label{sec:database-eval}
 We first evaluate our channel selection component by measuring the time it takes for our system to vacate and reacquire a channel, following a change in a database. The experiment is illustrated in Figure~\ref{fig:paws}.
-We show that it is able to respond to changes in the spectrum database in compliance with ETSI specifications~\cite{etsi_tvws} which mandate that transmissions should stop within one minute after the channel ceases to be available.
+We show that the response time is 
+%it is able to respond to changes in the spectrum database 
+in compliance with ETSI specifications~\cite{etsi_tvws} which mandate that transmissions should stop within one minute after the channel ceases to be available.
 
 In general, the granularity of channel availability is expected to be in hours and days~\cite{Rice_af}, as the channel is allocated to the incumbents such as wireless microphones for special events. We confirm this by inspecting the content of the database during the last year. 
  
@@ -68,14 +70,14 @@ In general, the granularity of channel availability is expected to be in hours a
   \hskip -8pt
     \includegraphics[width=0.5\textwidth]{./figs/paws.pdf}
   \vskip -6pt
-  \caption{Spectrum database interaction experiment: At 57sec channel is removed from the database for 5 min, 2sec after later the AP radio is off and the client stops transmitting.}
+  \caption{Spectrum database interaction experiment: At 57sec channel is removed from the database for 5 min, 2 sec later the AP radio is turned off and the client stops transmitting.}
   \label{fig:paws}
   \vskip -6pt
 \end{figure}
 
 %We see that 2sec after the channel has been removed, the radio is off. The client stops transmitting at the same time. This is well below the 60sec ETSI \cite{etsi_tvws} requirement. 
 
-AP takes 1min 36sec to start the radio after channel is reintroduced. This is because our interface with the AP requires an AP reboot after any radio parameter changes so once the channel is reintroduced. We note that this process can be shortened using more advanced AP control interfaces such as TR-069~\cite{tr69}. 
+AP takes 1min 36sec to reboot and start the radio after channel is reintroduced. This is because our interface with the AP requires an AP reboot after any radio parameter changes. We note that this process can be shortened using more advanced AP control interfaces such as TR-069~\cite{tr69}. 
 
 Once the AP is on, it takes another 56s for a client to connect and resume traffic because it has to perform cell search on various frequencies in multiple LTE bands. This time can be further reduced by disabling unused LTE bands, which we are unable to do on our existing clients. 
 
