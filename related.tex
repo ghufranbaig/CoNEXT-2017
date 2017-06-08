@@ -1,19 +1,16 @@
 \section{Discussion and Related Work}
 
-
-
-
-
-
-
-
 TV white spaces have recently become available for license exempt use~\cite{fcc, etsi_tvws}. 
 There are several currently proposed candidate technologies, such as 802.11af~\cite{Rice_af} and 802.22~\cite{wifi80222}, 
 but 802.11af seems to be the only one under active development. 
 
 LTE extensions have recently been proposed that seek to exploit unlicensed spectrum~\cite{qualcomm-lte-unlicensed,huawei-lte-unlicensed,ericsson-unlicensed}, but all these require an anchor, licensed spectrum for the LTE network.
 The main proposed standards are LAA, LWA and LTE-U. 
-Previous works ~\cite{co-existence, lteu-google} focus on WiFi and LTE coexistence in unlicensed spectrum, but coexistence between two LTE networks on the same spectrum has not been studied much.
+LTE-U focuses only on coexistence between LTE and WiFi using adaptive on/off duty cycling such that effectively only LTE nodes are operational during On period. But it has no mechanism of sharing spectrum between two interfering LTE networks.
+This is an orthogonal solution that could be deployed along CellFi to enable coexistence with 802.11af.
+LAA has proposed a contention protocol similar to WiFi CSMA to medium access. This enables LAA networks to coexist with both WiFi and other LAA networks, however its performance will suffer in long range whitespace networks as it will face similar MAC inefficiencies as 802.11af since the medium access mechanism is similar in both technologies.
+
+%Previous works ~\cite{co-existence, lteu-google} focus on WiFi and LTE coexistence in unlicensed spectrum, but coexistence between two LTE networks on the same spectrum has not been studied much.
 
 There are also numerous proposed solutions for coordinating interfering LTE access points, such as SON, ICIC, eICIC~\cite{smallcellbook}, 
 but these are vague on protocol details. 
@@ -26,9 +23,7 @@ WiFi channel allocation has been extensively researched.
 %http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5337940
 %http://research.microsoft.com/en-us/um/people/moscitho/Publications/ICNP_2008.pdf
 There have been several studies ~\cite{client-deriven} ~\cite{load-aware} that address resource allocation using graph coloring for WiFi networks, but their aim is to get maximum number of orthogonal contiguous channels to each interfering AP. Our work aims at getting weighted max-min fair allocation for interfering clients by utilizing as many spectrum fragments (not necessarily contiguous) as possible.
-\wf 802.11af can be made to use more than one channel~\cite{whitefi}, and  LTE can achieve this with 
-carrier aggregation. We leave exploring these options for future work. 
+\wf 802.11af can be made to use more than one channel~\cite{whitefi}, and  LTE can achieve this with carrier aggregation. We leave exploring these options for future work. 
 
-Several papers proposed the idea to use LTE in TV white spaces~\cite{dyspan_lte12, radisys} but none has described an
- architecture or proposed an efficient distributed interference management system compatible with today's hardware. 
+Several papers proposed the idea to use LTE in TV white spaces~\cite{dyspan_lte12, radisys} but none has described an architecture or proposed an efficient distributed interference management system compatible with today's hardware. 
 

@@ -55,9 +55,7 @@ that multiple networks will be deployed in the same area and will need to coexis
 
 %{\bf BR: Do we want to discuss this or rely on the discussion in \cf section?}
 Coexistence between disparate wireless technologies in the same spectrum is a hard challenge, and still not fully solved in practice for many technologies (e.g., Wi-Fi, Zigbee and Bluetooth). In fact, none of the current TVWS standards (802.11af, 802.22 and Weightless) attempts to solve inter-technology coexistence problem. 
-\todo{Recently proposed LTE extensions for unlicensed bands (LTE-U) has proposed using of adaptive on/off duty cycle as a mechanism to share the medium with \wf network in unlicensed bands. So effectively in on cycle  only LTE nodes are operational. However LTE-U has no mechanism of sharing spectrum between two interfering LTE nodes during the on cycle.} 
-In the same spirit, we will mandate decentralized interference management only among nodes using the same network technology, and assume\todo{ that LTE-U type on/off duty cycling is used for coexistence with \wf }
-or in the future, either one technology will prevail or that a database will make sure different technologies will occupy different, non-overlapping parts of spectrum. 
+In the same spirit, we will mandate decentralized interference management only among nodes using the same network technology, and assume in the future, either one technology will prevail or that a database will make sure different technologies will occupy different, non-overlapping parts of spectrum. 
 
 
 
@@ -97,7 +95,7 @@ Furthermore, we require our unlicensed cellular design to work entirely in unlic
 %% %The data is transmitted in data elements. 
 
 
-\section{Existing technologies \& unlicenced \\ cellular}
+\section{Existing technologies \& unlicenced cellular}
 We focus on Wi-Fi and LTE radio technologies as most of today's high speed wireless networks, and in particular cellular and TVWS networks, are based on one of these two wireless standards.
 They incorporate most of the modern PHY and MAC layer design constructs which make them very efficient.
 %The Wi-Fi variant 802.11af~\cite{Rice_af} is currently dominant among TVWS hardware platforms whereas LTE dominates the cellular market. 
@@ -206,8 +204,6 @@ We illustrate this in detail in an experiment described in Figure~\ref{fig:inter
 where we show that a strong interferer (with SINR $\leq 10$ dB) can degrade LTE throughput by up to $2\times$, and also cause frequent disconnections. 
 Thus, in order to make unplanned LTE deployment efficient, one needs to manage interference. 
 
-\todo{There have been recently proposed LTE extensions for unlicensed bands (LTE-U/LAA) that try to mitigate interference between neighboring base stations. However LTE-U focuses only on coexistence between LTE and WiFi. It proposes Carrier Sense Adaptive Transmission (CSAT) to efficiently co-exist with WiFi but does not tackle the issue of coexistence of two separate LTE networks. LAA has proposed a contention protocol similar to WiFi CSMA to medium access. This enables LAA networks to coexist with both WiFi and other LAA networks, however its performance will suffer in long range whitespace networks as it will face similar MAC inefficiencies as 802.11af since the medium access mechanism is similar in both technologies.}
-
 
 %% \begin{figure}[t]
 %%   \centering
@@ -239,7 +235,7 @@ In both cases we consider the same network of access points and place the same n
 The network range is smaller in case of 802.11ac (home Wi-Fi) than 802.11af (outdoor cellular) because of lower power (20dBm vs 36dBm) and worse propagation, 
 but the average SNR at the receiver is same in both scenarios. 
 However, the throughput of the 802.11af networks is much worse, as can be seen in Figure~\ref{fig:inefficiencies}.
-Therefore, although CSMA offers efficient and fair contention resolution in shot-range Wi-Fi networks, this is far from obvious in the cellular scenario. \\
+Therefore, although CSMA offers efficient and fair contention resolution in shot-range Wi-Fi networks, this is far from obvious in the cellular scenario.
 
 {\bf Summary.} Overall, LTE appears as a better fit for a TV white space cellular network due to its unique PHY and MAC layer properties.
 However, it has never been fully considered as a candidate design due to its lack of uncoordinated interference management. We explore this by describing \cf over the next sections.

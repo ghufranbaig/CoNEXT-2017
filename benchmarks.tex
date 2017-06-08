@@ -55,10 +55,12 @@ Measurements without SDR are performed outdoors. Measurements with SDR are perfo
 
 \subsection{Channel selection}
 \label{sec:database-eval}
-We first evaluate our channel selection component and show that it is able to respond to changes in the spectrum database. 
-A database client has to comply with ETSI specifications~\cite{etsi_tvws} which mandate that transmissions have to stop at most one minute after the channel ceases to be available. In general, the granularity of channel availability is expected to be in hours and days~\cite{Rice_af}, as the channel is allocated to the incumbents such as wireless microphones for special events. We confirm this by inspecting the content of the database during the last year. 
+We first evaluate our channel selection component by measuring the time it takes for our system to vacate and reacquire a channel, following a change in a database. The experiment is illustrated in Figure~\ref{fig:paws}.
+We show that it is able to respond to changes in the spectrum database in compliance with ETSI specifications~\cite{etsi_tvws} which mandate that transmissions should stop within one minute after the channel ceases to be available.
 
-We measure the time it takes for our system to vacate and reacquire a channel, following a change in a database. The experiment is illustrated in Figure~\ref{fig:paws}. Our system has only one channel available, used at the beginning of the experiment. The AP radio is active and the client is generating traffic. 
+In general, the granularity of channel availability is expected to be in hours and days~\cite{Rice_af}, as the channel is allocated to the incumbents such as wireless microphones for special events. We confirm this by inspecting the content of the database during the last year. 
+ 
+%Our system has only one channel available, used at the beginning of the experiment. The AP radio is active and the client is generating traffic. 
 
 \begin{figure}[htb!]
   \vskip -12pt
@@ -66,19 +68,16 @@ We measure the time it takes for our system to vacate and reacquire a channel, f
   \hskip -8pt
     \includegraphics[width=0.5\textwidth]{./figs/paws.pdf}
   \vskip -6pt
-  \caption{Spectrum database interaction experiment}
+  \caption{Spectrum database interaction experiment: At 57sec channel is removed from the database for 5 min, 2sec after later the AP radio is off and the client stops transmitting.}
   \label{fig:paws}
   \vskip -6pt
 \end{figure}
 
-At 57sec we remove the channel from the database for 5 min, as illustrated in the top figure. We see that 2sec after the channel has been removed, the radio is off. The client stops transmitting at the same time. This is well below the 60sec ETSI requirement. 
+%We see that 2sec after the channel has been removed, the radio is off. The client stops transmitting at the same time. This is well below the 60sec ETSI \cite{etsi_tvws} requirement. 
 
-Once the channel is reintroduced, the interference client reboots the AP to restart the radio. This takes 1min 36sec. Our current interface with the AP requires an AP reboot after any radio parameter changes, and the AP OS reboot accounts for most of this time. We note that this process can be shortened using more advanced AP control interfaces such as TR-069~\cite{tr69}. 
+AP takes 1min 36sec to start the radio after channel is reintroduced. This is because our interface with the AP requires an AP reboot after any radio parameter changes so once the channel is reintroduced. We note that this process can be shortened using more advanced AP control interfaces such as TR-069~\cite{tr69}. 
 
-Once the AP is on, it takes another 56s for a client to connect to the access point and resume traffic. This is because the client has to perform cell search on various frequencies in multiple LTE bands. This time can be further reduced by disabling unused LTE bands, which we are unable to do on our existing clients. 
-
-
-
+Once the AP is on, it takes another 56s for a client to connect and resume traffic because it has to perform cell search on various frequencies in multiple LTE bands. This time can be further reduced by disabling unused LTE bands, which we are unable to do on our existing clients. 
 
 \begin{figure*}[htb!]
   \hfill
@@ -168,7 +167,7 @@ Due to fluctuating channel conditions, throughput varies significantly in the se
 Further, the last ON period shows the effect of fading, where despite interference being present, its signal is weak thus not affecting the overall throughput.
 
 While \cf requires subband CQI reporting, our commercial small-cell access point does not implement the full LTE spec 
-and only reports wide-band CQI over the entire 5 MHz channel. Thus, we only implemented wideband CQI reporting for this experiment. 
+and only reports wide-band CQI over the entire 5 MHz channel. Thus, we only use wideband CQI reporting for this experiment. 
 Yet, the same observations apply.
 
 Our estimator works as follows. Since interference is typically bursty, we consider the maximum CQI observed within a time window as an estimate of CQI for a channel without interference. 

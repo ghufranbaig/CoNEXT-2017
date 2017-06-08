@@ -35,7 +35,8 @@ Like WiFi, the \cf interference mitigation algorithm relies on sensing informati
 \noindent{\bf Number of active clients.} In LTE, each client sets up a connection by sending PRACH preambles. 
 This is a special preamble that is used by access points to identify a new node and assign spectral resources to it. 
 In \cf, we extend this mechanism, and each access point is equipped with an additional PRACH detector that can sense PRACH preambles from \emph{clients it is not serving} (Section~\ref{sec:pracheval}).
-This is used to estimate the number of active clients. \todo{Note that adding additional PRACH detector does not require any invasive change to LTE infrastructure \ref{}}
+This is used to estimate the number of active clients. 
+%\todo{Note that adding additional PRACH detector does not require any invasive change to LTE infrastructure \cite{}}
 The transmit power difference between a client and \eNB is up to 10dB, 
 and a PRACH detector can reliably detect preambles at -10dB SNR~\cite{prach}. 
 Thus, any client whose PRACH is detected is likely to be affected by transmissions from the \eNB. 
@@ -74,7 +75,6 @@ $\id{S}_i =  \id{N}_i * \mathcal{S} / \id{NP}_i.$
 This is how we ensure \emph{frequency fair-sharing.} All $\id{NP}_i$ clients that \eNB $i$ interferes with should get enough non-interfering subchannels. 
 
 Because of imperfect sensing, this approach can occasionally underestimate the target shares and reduce efficiency, but it is still more efficient than Wi-Fi or LTE, as our evaluation in Section~\ref{sec:eval} shows. An \eNB can also initially overestimate the share available to some of the clients, in which case the scheduler will later automatically assign these to its other clients. This is further discussed later in \ref{sec:asymmetry}.
-\todo{copy the discussion from the appendix to correct location.} 
 
 %one of its client but if the client does not actually have enough interference free subchannels, 
 %the scheduler will make sure that the additional subchannels are either used for some other client of the same \eNB or are left free.
@@ -199,7 +199,7 @@ See Figure~\ref{fig:hopping} for pseudocode.
 \noindent $\bullet$ Otherwise we interpret subchannel $k$ as being a \emph{bad} for \eNB $i$. Consequently, the bucket value $b^{i}_{k}$ is decremented to $b_k(t+1) = b_k(t) - frac_j$, where $frac_j$ is the fraction of time that $u_j$ got scheduled on subchannel $k$ during the last period.
 \vskip 2pt
 %\end{itemize}
-\todo{The random bucket values and bucket update procedure would ensure that two interfering users scheduled on a subchannel would not give up the subchannel at the same time hence ensuring both users get non-interfering subchannels eventually. }
+%\todo{The random bucket values and bucket update procedure would ensure that two interfering users scheduled on a subchannel would not give up the subchannel at the same time hence ensuring both users get non-interfering subchannels eventually. }
 The subchannel hopping and bucket update procedures are similar to other Markovian schemes (e.g. IQ-hopping~\cite{iqhop} and references therein) but are adapted to address the main differences between LTE and Wi-Fi, discussed at the beginning of this section.
 
 %% In particular, while WiFi has a well defined channel and each WiFi node only
@@ -260,7 +260,9 @@ Channel re-use allows for fast convergence and upto 2x gain in throughput for ex
   \includegraphics[width=\textwidth,height=0.6\columnwidth]{./figs/under.pdf}
   \end{minipage}
   \hfill
-  \caption{Lines reflect associated clients to access points while dashed lines reflect interference. }
+  \caption{Lines reflect associated clients to access points while dashed lines reflect interference. (a) Information assymetry with two total channels. eNodeB 1 overestimates his share because it cannot sense UE 2. (b) Informatrion assymetry with 4 total channels. eNodeB 2 has a
+share of 1, and while eNodeB 1 can increase his share to 3, it only reserves his fair-share, i.e., 2
+channels because it does know how many subchannels 2 is using (1 due to UEs 3-5)}
 %(a) Importance of channel re-use. client 3 can only get its share if access points 1-2 schedule their clients on same two channels. 
 %(a) Information asymmetry with two total channels. access point 1 overestimates his share because it cannot sense client 2. (b) Informatrion assymetry with 4 total channels. 
 %access point 2 has a share of 1, and while access point 1 can increase his share to 3, 
@@ -279,10 +281,6 @@ The best known examples of information asymmetries in WiFi are exposed and hidde
 The distributed share calculation algorithm of \cf also suffers from two cases of information asymmetry, 
 described below. 
 
-
-
-
-
 %\begin{figure*}[t]
 % \centering
 %    \includegraphics[width=0.9\textwidth, height=0.4\columnwidth]{figs/exampleFigs-crop}
@@ -297,14 +295,12 @@ described below.
 
 
 
-\noindent {\bf Incorrect share:} Figure~\ref{fig:asym}(a) shows an example of incorrect share calculation caused by asymmetric views. 
-access point 1 can hear only the PRACH preamble from client 1, whereas eNB2 hears it from both clients 1 and 2. The optimal share for both eNBs is half of the spectrum. 
-Because of asymmetry, access point 1 is overestimating its share to be the whole spectrum.
-
+\noindent {\bf Incorrect share:} Figure~\ref{fig:asym}(a) shows an example of incorrect share calculation. 
+%access point 1 can hear only the PRACH preamble from client 1, whereas eNB2 hears it from both clients 1 and 2. The optimal share for both eNBs is half of the spectrum. 
+%Because of asymmetry, access point 1 is overestimating its share to be the whole spectrum.
 %BR: This is not true. If we don't adjust the share, it will make eNB1 to hop a lot, causing disturbances in the rest of the network...
 %This case of information asymmetry is not detrimental to the control plane. It does not affect client 2 because if it did eNB1 would hear it RACH and account for it in the channel allocation. It only affect client1. eNB1 detects this from CQI reports from client1 and adjusts the allocation accordingly and entirely locally. 
-
-This case of information asymmetry is dealt with by the scheduler, \eNB $1$ will sense that there are less free subchannels available than it expected, and will not schedule any transmission in subchannels the client is facing interference on, reducing its effective share. The resulting effective share will still be feasible, allowing the distributed hopping algorithm to converge. However, this share adjustment may not be detected by other neighbors of \eNB $1$, leading to possible inefficiencies.
+This case of information asymmetry is dealt with by the scheduler, \eNB $1$ will sense that there are less free subchannels available than it expected, and will not schedule any transmission in subchannels the client is facing interference on, reducing its effective share. The resulting effective share will be feasible, allowing the distributed hopping algorithm to converge. However, this share adjustment may not be detected by other neighbors of \eNB $1$, leading to possible inefficiencies.
 %in the share calculation algorithm (Figure~\ref{fig:dsc}) 
 %through the $\id{free}_{i, j}$ variable. \eNB $1$ will sense that there are less free channels available than it expected, and will update its share. The resulting share will still be feasible, allowing the distributed hopping algorithm to converge. However, this share adjustment may not be detected by other neighbors of \eNB $1$, leading to possible inefficiencies. 
 
@@ -315,14 +311,13 @@ This case of information asymmetry is dealt with by the scheduler, \eNB $1$ will
 %  \label{underestimation}
 %\end{figure}
 
-\noindent {\bf Suboptimal share:} Figure~\ref{fig:asym}(b) shows an example with a total of 4 subchannels, where access point 1 can get one more subchannel since access point 2 can only use one subchannel for its client;
-this is because it is interfering with three other clients. Access point 1 limits itself to its estimated share of two subchannels, resulting in under allocation of resources. 
-This case of information asymmetry is fundamental of our setup as \eNB $1$ cannot learn about other clients purely from sensing. It can also not be more aggressive in this case as it could unfairly take a share 
-from node 2, should the three clients on the right be absent. 
+\noindent {\bf Suboptimal share:} Figure~\ref{fig:asym}(b) shows an example of suboptimal share calculation.
+%shows an example with a total of 4 subchannels, where access point 1 can get one more subchannel since access point 2 can only use one subchannel for its client;this is because it is interfering with three other clients. Access point 1 limits itself to its estimated share of two subchannels, resulting in under allocation of resources. 
+This case of information asymmetry is fundamental of our setup as \eNB $1$ cannot learn about other clients purely from sensing. It can also not be more aggressive in this case as it could unfairly take a share from \eNB 2, should the three clients on the right be absent. 
 
 The performance effects of information asymmetries of \cf in general topologies are difficult to analyze precisely. 
 In Section~\ref{sec:eval},
- we show that in complex topologies, \cf's performance is comparable to state-of-the-art, centralized resource allocation frameworks for cellular networks~\cite{fermi}.
+we show that in complex topologies, \cf's performance is comparable to state-of-the-art, centralized resource allocation frameworks for cellular networks~\cite{fermi}.
 
 
 
@@ -333,41 +328,39 @@ In Section~\ref{sec:eval},
 %The reason why this work is our high-level design and the distributed share calculation. The distributed share calculation makes sure that the starting allocation is feasible. This allows us to do packing based on free channels. If the initial share wasn't feasible, the algorithm would have issues converging (Dan has a proof for this). This is why the packing idea is fundamentally suitable for our approach.
 
 We now analyze the properties of the assignment framework given in ~\ref{sec:channel-selection}. 
-In particular, we will give a sufficient condition under which the basic hopping algorithm 
-(without the channel re-use heuristic) is guaranteed to converge, 
-and probabilistic convergence bounds in this case. 
-
-More precisely, we abstract the given setting as an undirected graph $G = (V, E)$, where each vertex $v_i \in V$ corresponds to an \eNB $i$. 
+%We focus on \emph{convergence time}, i.e., the time required for the algorithm to reach a configuration in which each node has its subchannel demand fulfilled, and stops hopping. 
+%In particular, we will give a sufficient condition under which the basic hopping algorithm  (without the channel re-use heuristic) is guaranteed to converge,  and probabilistic convergence bounds in this case. 
+%More precisely, 
+We abstract the given setting as an undirected graph $G = (V, E)$, where each vertex $v_i \in V$ corresponds to an \eNB $i$. 
 Further, two vertices $v_i$ and $v_j$ are connected by an edge if $v_i$ may interfere with one of $v_j$'s clients, or vice-versa. 
 Let $N(v_i)$ denote the graph neighborhood of node $v_i$. 
 Vertices share a set of $M$ subchannels, and initially each vertex $v_i$ has integer demand $d_i \geq 0$, which corresponds to the sum of user shares computed by the algorithm. 
-Our analysis makes the assumption that, in every neighborhood, there exists a constant factor difference between the sum of demands and the total number of  subchannels.
-
+We make the assumption that, in every neighborhood, there exists a constant factor difference between the sum of demands and the total number of subchannels i.e.
 \begin{eqnarray*}
   \textnormal{There exists a constant } 1 / M < \gamma \leq 1, \textnormal{ such that: } \\ \textnormal{ for every node }  v_i, \sum_{\ell \in N(v_i)} d_\ell \leq (1 - \gamma) M.
 \end{eqnarray*}
-
-Further, our analysis models subchannel fading by admitting a probability $0 \leq p < 1$ that a subchannel sensed as \emph{free} (and therefore chosen by the hopping procedure) is in fact unusable by the node. 
+Subchannel fading is modeled by admitting a probability $0 \leq p < 1$ that a subchannel sensed as \emph{free} 
+%(and therefore chosen by the hopping procedure) 
+is in fact unusable by the node. 
 This failure event is assumed to be independent of the nodes' random hopping choices, and across hopping rounds. 
-
-We focus on \emph{convergence time}, i.e., the time required for the algorithm to reach a configuration in which each node has its subchannel demand fulfilled, and stops hopping. 
-We prove the following. 
-
+%We prove the following. 
+Under the above assumptions, we claim the following is true. The proof is omitted due to space limitation, the reader can consult \cite{}.
 \begin{thm}
 \label{thm:convergence}
-	Under the above assumptions, the algorithm is guaranteed to converge with probability $1$. The algorithm will converge in $O( M \log n / ((1 - p) \cdot \gamma) )$ rounds, both in expectation and with high probability.   
+	 The algorithm is guaranteed to converge with probability $1$. The algorithm will converge in $O( M \log n / ((1 - p) \cdot \gamma) )$ rounds, both in expectation and with high probability.   
 \end{thm}
-\begin{proof}
-	Let us consider the process by which a node $v$ satisfies a unit of its demand. By assumption, the following hold: 1) the node $v$ will not hop on a subchannel currently occupied by another node $v'$ and 2) since a node $v_\ell$ may only occupy $d_\ell$ subchannels in a round, and $\sum_{\ell \in N(v)} d_\ell \leq (1 - \gamma) M$, there exist at least $\gamma M \geq 1$ subchannels which are available at every hopping attempt. Therefore, given a hopping attempt by $v$, there are two conditions under which it does not succeed in acquiring the channel: either another node makes the same choice, or the channel is faded. These events occur independently, and, by assumption, the probability that node $v$ satisfies one unit of demand in a hopping attempt is at least $(1 - p) \gamma$.  
+ 
+%\begin{proof}
+%	Let us consider the process by which a node $v$ satisfies a unit of its demand. By assumption, the following hold: 1) the node $v$ will not hop on a subchannel currently occupied by another node $v'$ and 2) since a node $v_\ell$ may only occupy $d_\ell$ subchannels in a round, and $\sum_{\ell \in N(v)} d_\ell \leq (1 - \gamma) M$, there exist at least $\gamma M \geq 1$ subchannels which are available at every hopping attempt. Therefore, given a hopping attempt by $v$, there are two conditions under which it does not succeed in acquiring the channel: either another node makes the same choice, or the channel is faded. These events occur independently, and, by assumption, the probability that node $v$ satisfies one unit of demand in a hopping attempt is at least $(1 - p) \gamma$.  
 	
-	Since round choices and fading are assumed to be independent across rounds, the expected time for the fixed node to satisfy a unit of demand is $ 1 / (\gamma (1 - p))$. By a Chernoff bound, for any constant $k \geq 2$, there exists a constant $c \geq 1$ such that the probability that the node fails to satisfy a unit after $k \log n / (\gamma (1 - p) )$ consecutive hopping attempts is at most $1 / n^c$. 
-	By a union bound on the number of nodes, the probability that there exists \emph{some} node which fails after $k \log n / (\gamma (1 - p ))$ consecutive hopping attempts, is at most $1 / n^{c - 1}$. 
-	The claim then follows by noticing that a node's demand is of at most $M$ subchannels. 
-\end{proof}
+%	Since round choices and fading are assumed to be independent across rounds, the expected time for the fixed node to satisfy a unit of demand is $ 1 / (\gamma (1 - p))$. By a Chernoff bound, for any constant $k \geq 2$, there exists a constant $c \geq 1$ such that the probability that the node fails to satisfy a unit after $k \log n / (\gamma (1 - p) )$ consecutive hopping attempts is at most $1 / n^c$. 
+%	By a union bound on the number of nodes, the probability that there exists \emph{some} node which fails after $k \log n / (\gamma (1 - p ))$ consecutive hopping attempts, is at most $1 / n^{c - 1}$. 
+%	The claim then follows by noticing that a node's demand is of at most $M$ subchannels. 
+%\end{proof}
 
 
-It is interesting to consider the effect of channel packing on convergence. 
-Technically, a larger channel slack $\gamma$ may be needed if hopping and packing occur concurrently, as packing may increase collisions. 
-However, the fact that packing occurs after the node stops hopping ensures that the two procedures are independent to some degree.
-The empirical evaluation confirms that convergence still occurs with packing, even for dynamic traffic patterns. 
+%It is interesting to consider the effect of channel packing on convergence. 
+%Technically, a larger channel slack $\gamma$ may be needed if hopping and packing occur concurrently, as packing may increase collisions. 
+%However, the fact that packing occurs after the node stops hopping ensures that the two procedures are independent to some degree.
+%The empirical evaluation confirms that convergence still occurs with packing, even for dynamic traffic patterns. 
 
