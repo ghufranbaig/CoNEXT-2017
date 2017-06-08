@@ -62,14 +62,16 @@ Several standards have been proposed for networking in TV white spaces (802.11af
 on 802.11af, which is a modification of Wi-Fi. 
 \wf appears as a natural fit for an unplanned deployment in TVWS.
 It inherently allows for network co-existence, and 802.11af amendments allow it to operate in TVWS while maintaining its low silicon design cost by significantly reusing existing Wi-Fi design. 
-Yet, \wf PHY is not suited for long-range~(Section~\ref{sec:PHY}) and 
+Yet, \wf is originally designed for improved indoor propagation; its PHY is not suited for long-range~(Section~\ref{sec:PHY}) and 
 \wf's overheads, such as carrier sense and backoff mechanisms, severely limit its efficiency on long range~(Section~\ref{sec:MAC}). 
 
 %Moreover, the asymmetric links between downlink and uplink exacerbate hidden 
 %and exposed terminals in long ranges (Section~\ref{sec:PHY}).
 
 
-Beyond Wi-Fi, another obvious candidate for an unlicenced cellular network could be LTE/4G, which presents a well developed ecosystem for cellular networking in licensed frequency. 
+Beyond Wi-Fi, another obvious candidate for an unlicenced cellular network could be LTE/4G, which presents a well developed ecosystem for cellular networking in licensed frequency.
+It also supports a large number of spectrum bands, including recently added support for parts of 600 MHz spectrum as a result of FCC incentive auction (which coincides with the TV white space spectrum).
+It is thus natural to ask how well is LTE-based network suitable for deployment in TV white space spectrum.
 Surprisingly, this option has not been much explored. 
 Conventional cellular technologies, such as LTE, are efficient and provide long range~(Section~\ref{sec:PHY}). 
 But they are tailored to licensed spectrum where interference is managed either through coordinated control protocols or at deployment phase. 
@@ -81,9 +83,7 @@ Standards and interoperability across protocols and networks are often poorly sp
 and in general, ``cellular'' reflects a complex ecosystem, tightly controlled by providers and hardware vendors. 
 Therefore, LTE in its current form faces major challenges in supporting network co-existence. 
 
-
-
-In this paper, we propose {\em \cf}, a TVWS-compliant cellular network architecture built on top of the LTE stack. 
+In this paper, we propose {\em \cf}, a TVWS-compliant cellular network architecture built on top of the LTE stack that addresses these issues. 
 \cf leverages LTE PHY-layer advantages to achieve coverage. 
 \cf extends the LTE stack with two new components, a channel selection and an interference management component. 
 The channel selection component interfaces with a TVWS database and is able to quickly vacate a channel once it has been assigned to a primary user. 
@@ -92,6 +92,8 @@ Interference management across \cf nodes is based on an algorithm
  for distributed coordination in LTE that requires no explicit communication or coordination between access points.
 The interference management component estimates the number of contending nodes using standard LTE radio mechanisms and uses this estimate to calculate its own network share. Each access point then strategically and independently selects one or multiple LTE resource blocks according to this derived share, 
 and relies on the standard LTE scheduler to allocate resource blocks to clients.  
+In essence, \cf proposes a novel, LTE-compatible and distributed channel allocation mechanism which is based on spectrum reservation and is more suitable for long-range cellular coverage than CSMA. 
+
 
 %% Interference is managed through frequency sharing following a two-phase process where
 %% channel reservation and resource scheduling are decoupled. Base
@@ -116,7 +118,7 @@ Our contributions can be summarized as follows.
 \item We demonstrate the limitations
     of the existing WiFi and LTE protocols when deployed in the unlicensed
   cellular scenario. These observations lay the foundation for the  design of \cf.  
-\item We develop \cf, a long-range LTE-based, TVWS-compliant cellular architecture with decentralized interference management that allows for unplanned and uncoordinated deployments. 
+\item We develop \cf, a long-range, LTE-based, TVWS-compliant cellular architecture. The key component of the architecture is a decentralized interference management that is LTE-compatible and allows for unplanned and uncoordinated LTE deployments. 
 \item We demonstrate the feasibility of \cf through a series of experiments with off-the-shelf LTE equipment. 
 With the exception of interference management component, \cf access points have been operational for several 
 months connecting under-privileged users in our local area. Our measurements are further used to guide a large-scale evaluation of \cf. 

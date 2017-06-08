@@ -1,17 +1,25 @@
 \begin{abstract}
 
-Unlicensed wireless access is mainstream today, with its prime example, \wf carrying more than 70\% of wireless traffic. 
-Unplanned, low-cost deployment and the absence of complex signalling protocols let \wf thrive. 
-Yet, \wf and other unlicensed technologies have so far been successful only in short-range scenarios. 
-Recently, the availability of TV white space frequencies have promised to extend the benefits of unlicensed networking to long-range scenarios. 
-The main technology behind this drive is 802.11af, a \wf variant adapted for TV frequencies, but it has had limited adoption so far.
+%% Unlicensed wireless access is mainstream today, with its prime example, \wf carrying more than 70\% of wireless traffic. 
+%% Unplanned, low-cost deployment and the absence of complex signalling protocols let \wf thrive. 
+%% Yet, \wf and other unlicensed technologies have so far been successful only in short-range scenarios. 
+%% Recently, the availability of TV white space frequencies have promised to extend the benefits of unlicensed networking to long-range scenarios. 
+%% The main technology behind this drive is 802.11af, a \wf variant adapted for TV frequencies, but it has had limited adoption so far.
 
-In this paper we propose \cf, an alternative architecture for cellular networking in unlicensed TV white space frequencies, based on LTE. 
+
+In this paper we study network architecture for unlicensed cellular networking for outdoor coverage in TV white spaces.
+The main technology proposed for TV white spaces is 802.11af, a \wf variant adapted for TV frequencies.
+However, 802.11af is originally designed for improved indoor propagation.
+We show that long links, typical for outdoor use, exacerbate know Wi-Fi issues, such as hidden and exposed terminal, and significantly reduce its efficiency. 
+
+Instead, we propose \cf, an alternative architecture based on LTE. 
 LTE is designed for long-range coverage and throughput efficiency, but it is also designed to operate in tightly controlled and centrally managed networks. 
 \cf overcomes these problems by designing an LTE-compatible spectrum database component, mandatory for TV white space networking,
-and introducing an interference management component for distributed coordination that requires no explicit communication between LTE base stations. 
-Through extensive real world evaluation on off-the-shelf LTE equipment and simulations, 
-we show the feasibility of our design and the benefits of \cf compared to 802.11af.
+and introducing an interference management component for distributed coordination.
+\cf interference management is compatible with existing LTE mechanisms, requires no explicit communication between base stations, and is more efficient than CSMA for long links.
+
+We evaluate our design through extensive real world evaluation on off-the-shelf LTE equipment and simulations. 
+We show that, compared to 802.11af, it increases coverage by 40\% and reduces median flow completion times by 2.3x.
 
 
 
