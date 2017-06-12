@@ -29,13 +29,16 @@ schedules data packets, etc.
 
 
 \begin{figure}[htb]
+\vspace{-15pt}
+
   \centering
-    \vspace{-12pt}
     %\includegraphics[width=\columnwidth, height=0.38\columnwidth]{./figs/density-crop}
     \includegraphics[width=\columnwidth]{./figs/architecture}
     \vspace{-0.3in}
-    \caption{\cf architecture overview. The shaded blocks denote unmodified existing components (parts of LTE network stack and TVWS database) and the white blocks are new components introduced by \cf. }
+    \caption{\small{\cf architecture overview. The shaded blocks denote unmodified existing components (parts of LTE network stack and TVWS database) and the white blocks are new components introduced by \cf. }}
   \label{fig:arch}
+\vspace{-15pt}
+
 \end{figure}
 
 %TWe implement the two new components (interference management and database client) in software. We next explain in detail each of the components and how they interface with the rest of the system.  
@@ -119,10 +122,6 @@ Once the interference management component decides which resource block a schedu
 
 %% \noindent{\bf Low cost:}
 %% Small cells cost \$1000 and can be much cheaper in high volumes, with transmit powers of up to 30dBm. LTE terminals cost as low as \$50, and can transmit with up to 23dBm. They are also easy to deploy. Small cell E40~\cite{ipa} has dimensions XX. A matching 7dBi antenna costs \$100, has dimensions 25cm x 25cm x 25cm, weights XX kg and can be as easily deployed as a TV antenna.
-
-
-
-
 
 
 
